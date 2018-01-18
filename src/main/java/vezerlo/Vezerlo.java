@@ -23,8 +23,11 @@ import feluletek.RajzPanel;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -35,6 +38,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
@@ -78,11 +82,12 @@ public class Vezerlo implements Runnable {
         try {
            
             
-            ClassLoader classLoader = getClass().getClassLoader();
-            File file = new File(classLoader.getResource(Global.HANG_ELERES).getFile());
-            Zenelejatszo zene=new Zenelejatszo(new FileInputStream(file));
-            new Thread(zene).start();
-            
+//            ClassLoader classLoader = getClass().getClassLoader();
+//            File file = new File(classLoader.getResource(Global.HANG_ELERES).getFile());
+              
+             new Zenelejatszo(Global.HANG_ELERES).inditas();
+              
+             
             
             
             statikusBeallitas();
