@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  * @author varga
  */
 public class FelhasznaloDAO {
-
+    private static List<Eredmeny> aktualisEredmenyek;
     private Connection kapcsolat;
 
     public FelhasznaloDAO(Connection kapcsolat) {
@@ -51,7 +51,7 @@ public class FelhasznaloDAO {
             while (rs.next()) {
                 pont = rs.getInt("pont");
                 datum = rs.getDate("datum");
-
+                
                 eredmeny = new Eredmeny(pont, datum.getTime());
                 felhasznalo.addEredmeny(eredmeny);
             }
@@ -59,6 +59,8 @@ public class FelhasznaloDAO {
         } catch (SQLException ex) {
             Logger.getLogger(FelhasznaloDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        aktualisEredmenyek=felhasznalo.getEredmenyek();
         return felhasznalo;
     }
 /**
@@ -96,6 +98,7 @@ public class FelhasznaloDAO {
             while (rs.next()) {
                 pont = rs.getInt("pont");
                 datum = rs.getDate("datum");
+                //id=rs.getInt("id");
                 eredmenyek.add(new Eredmeny(pont, datum.getTime()));
             }
             rs.close();
@@ -112,24 +115,29 @@ public class FelhasznaloDAO {
      * @param felhasznalo 
      */
     public void eredmenyMentes(Felhasznalo felhasznalo) {
-
+        
         String sql = "INSERT INTO Eredmeny (pont, datum, userid) values (?, ?, ?)";
-        String sql_delete = "DELETE id,userid,pont,datum From Eredmeny WHERE ";
-        List<Eredmeny> eredmenyek = felhasznalo.getEredmenyek();
+        List<Eredmeny> kulonbozet=new ArrayList<>();
+        for(int i=0;i<felhasznalo.getEredmenyek().size();i++){
+        if(!aktualisEredmenyek.contains(felhasznalo.getEredmenyek().get(i))){
+            System.err.println("Kulonzotet");
+            kulonbozet.add(felhasznalo.getEredmenyek().get(i));
+        }
+        }
+        
+      List<Eredmeny> eredmenyek = felhasznalo.getEredmenyek();
         PreparedStatement stmt = null;
         try {
             stmt = kapcsolat.prepareStatement(sql);
             int userid = getUserID(felhasznalo.getFelhasznaloNev());
-            for (Eredmeny eredmeny : eredmenyek) {
+            for (Eredmeny eredmeny : kulonbozet) {
+              
                 stmt.setInt(1, eredmeny.getPont());
                 java.sql.Date datum = new java.sql.Date(eredmeny.getDatum());
                 stmt.setDate(2, datum);
                 stmt.setInt(3, userid);
+         
                 stmt.executeUpdate();
-
-//                stmt = kapcsolat.prepareStatement(sql_delete);
-
-  //              stmt.executeQuery();
                 
                 
                 
@@ -139,6 +147,9 @@ public class FelhasznaloDAO {
             Logger.getLogger(FelhasznaloDAO.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Duplikalt eredmeny.");
     }
+        kulonbozet.clear();
+        aktualisEredmenyek=felhasznalo.getEredmenyek();
+        
         
     }
 }

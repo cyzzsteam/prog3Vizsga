@@ -14,10 +14,14 @@ public class Eredmeny implements Comparable<Eredmeny> {
     private int pont;
     private long datum;
 
+
     public Eredmeny(int pont, long datum) {
         this.pont = pont;
         this.datum = datum;
     }
+
+
+    
 
     public int getPont() {
         return pont;
@@ -34,7 +38,7 @@ public class Eredmeny implements Comparable<Eredmeny> {
 
     @Override
     public int compareTo(Eredmeny o) {
-        return this.pont-o.pont;
+        return o.pont-this.pont;
     }
     
 }
