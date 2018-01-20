@@ -120,7 +120,7 @@ public class FelhasznaloDAO {
         List<Eredmeny> kulonbozet=new ArrayList<>();
         for(int i=0;i<felhasznalo.getEredmenyek().size();i++){
         if(!aktualisEredmenyek.contains(felhasznalo.getEredmenyek().get(i))){
-            System.err.println("Kulonzotet");
+        
             kulonbozet.add(felhasznalo.getEredmenyek().get(i));
         }
         }
