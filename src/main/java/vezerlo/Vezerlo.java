@@ -23,11 +23,6 @@ import feluletek.RajzPanel;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -38,7 +33,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
@@ -63,6 +57,8 @@ public class Vezerlo implements Runnable {
     private Connection con;
     private Horgasz horgasz;
 
+    private boolean aktiv=false;
+    
     private int pont;
 
     private LoginDAO loginDAO;
@@ -143,6 +139,8 @@ public class Vezerlo implements Runnable {
      */
     public void startClick() {
 
+        
+        if(!aktiv){
         pont = 0;
         menuPanel.setPont(pont);
         viziElemek.clear();
@@ -160,7 +158,8 @@ public class Vezerlo implements Runnable {
 
         Thread t = new Thread(this);
         t.start();
-
+        }
+        rajzPanel.grabFocus();
     }
 
     /**
@@ -168,7 +167,10 @@ public class Vezerlo implements Runnable {
      */
     public void sugoClick() {
         JOptionPane.showMessageDialog(null, Global.SUGO_TEXT);
-
+        rajzPanel.grabFocus();
+        
+        
+        
     }
 
     /**
@@ -205,6 +207,7 @@ public class Vezerlo implements Runnable {
      */
     public void egyebBezar() {
         egyebFrame.dispose();
+        rajzPanel.grabFocus();
     }
 
     /**
@@ -276,10 +279,11 @@ public class Vezerlo implements Runnable {
      */
     @Override
     public void run() {
-        
+    
 
-
-
+        menuPanel.gombAktivitas("eredmeny",false);
+        menuPanel.gombAktivitas("start",false);
+        aktiv=true;
         int lefutasok = 30;
         while (lefutasok >= 0) {
             menuPanel.setIdo(lefutasok);
@@ -313,7 +317,9 @@ public class Vezerlo implements Runnable {
         felhasznaloDAO.eredmenyMentes(felhasznalo);
         horgasz.setAktiv(false);
         viziElemek.clear();
-
+        aktiv=false;
+        menuPanel.gombAktivitas("eredmeny",true);
+        menuPanel.gombAktivitas("start",true);
     }
 
     /**

@@ -168,4 +168,15 @@ public class MenuPanel extends javax.swing.JPanel {
 
         lbl_Pont.setText(pont + " pont\t" + ido + " mp");
     }
+
+    public void gombAktivitas(String eredmeny, boolean b) {
+        switch(eredmeny){
+            case "start":
+                btn_Start.setEnabled(b);
+                break;
+            case "eredmeny":
+                btn_Eredmenyek.setEnabled(b);
+                break;
+        }
+    }
 }
